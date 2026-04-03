@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediBook - Sign Up</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body { background-color: #f8f9fa; }
+
+    .signup-card {
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .form-control.is-valid  { border-color: #198754; }
+    .form-control.is-invalid { border-color: #dc3545; }
+
+    .valid-feedback, .invalid-feedback {
+      font-size: 0.8rem;
+    }
+
+    .strength-bar {
+      height: 5px;
+      border-radius: 5px;
+      transition: all 0.3s;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">🏥 MediBook</a>
+      <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="DoctorPage">DOCTORS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="aboutus.html">ABOUT US</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+      <div class="col-md-7">
+        <div class="card p-4 signup-card">
+
+          <h4 class="text-center mb-1">Create an Account</h4>
+          <p class="text-center text-muted small mb-4">
+            Please fill in all fields correctly
+          </p>
+
+          <!-- Global error box — shown only if JS fails -->
+          <div id="globalError" class="alert alert-danger d-none"></div>
+
+          <form id="signupForm" action="SignUp" method="post" novalidate>
+            <div class="row g-3">
+
+              <!-- User ID -->
+              <div class="col-md-6">
+                <label class="form-label">User ID</label>
+                <input type="text" class="form-control"
+                  id="uid" name="uid"
+                  placeholder="Enter a numeric user id">
+                <div class="invalid-feedback" id="uid-error"></div>
+              </div>
+
+              <!-- Full Name -->
+              <div class="col-md-6">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control"
+                  id="name" name="name"
+                  placeholder="Enter full name">
+                <div class="invalid-feedback" id="name-error"></div>
+              </div>
+
+              <!-- Phone -->
+              <div class="col-md-6">
+                <label class="form-label">Phone Number</label>
+                <input type="text" class="form-control"
+                  id="phone" name="phone"
+                  placeholder="10 digit phone number">
+                <div class="invalid-feedback" id="phone-error"></div>
+              </div>
+
+              <!-- Email -->
+              <div class="col-md-6">
+                <label class="form-label">Email</label>
+                <input type="text" class="form-control"
+                  id="email" name="email"
+                  placeholder="example@email.com">
+                <div class="invalid-feedback" id="email-error"></div>
+                <div class="valid-feedback">Looks good!</div>
+              </div>
+
+              <!-- Address -->
+              <div class="col-md-12">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control"
+                  id="address" name="address"
+                  placeholder="Enter your address">
+                <div class="invalid-feedback" id="address-error"></div>
+              </div>
+
+              <!-- City -->
+              <div class="col-md-4">
+                <label class="form-label">City</label>
+                <input type="text" class="form-control"
+                  id="city" name="city"
+                  placeholder="City">
+                <div class="invalid-feedback" id="city-error"></div>
+              </div>
+
+              <!-- State -->
+              <div class="col-md-4">
+                <label class="form-label">State</label>
+                <input type="text" class="form-control"
+                  id="state" name="state"
+                  placeholder="State">
+                <div class="invalid-feedback" id="state-error"></div>
+              </div>
+
+              <!-- Pincode -->
+              <div class="col-md-4">
+                <label class="form-label">Pincode</label>
+                <input type="text" class="form-control"
+                  id="pincode" name="pincode"
+                  placeholder="6 digit pincode">
+                <div class="invalid-feedback" id="pincode-error"></div>
+              </div>
+
+              <!-- Password -->
+              <div class="col-md-6">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control"
+                  id="password" name="password"
+                  placeholder="Min 6 characters">
+                <!-- Password strength bar -->
+                <div class="strength-bar w-0 bg-secondary"
+                  id="strengthBar"></div>
+                <small id="strengthText"
+                  class="text-muted"></small>
+                <div class="invalid-feedback" id="password-error"></div>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="col-md-6">
+                <label class="form-label">Retype Password</label>
+                <input type="password" class="form-control"
+                  id="confirm_password" name="confirm_password"
+                  placeholder="Retype your password">
+                <div class="invalid-feedback" id="confirm-error"></div>
+                <div class="valid-feedback">Passwords match!</div>
+              </div>
+
+              <!-- Terms -->
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox"
+                    id="terms">
+                  <label class="form-check-label" for="terms">
+                    I agree to the
+                    <a href="#" style="color: dodgerblue">
+                      Terms & Privacy
+                    </a>
+                  </label>
+                  <div class="invalid-feedback" id="terms-error"></div>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="col-md-6">
+                <button type="button"
+                  class="btn btn-danger w-100"
+                  onclick="window.location.href='index.html'">
+                  Cancel
+                </button>
+              </div>
+              <div class="col-md-6">
+                <button type="submit" class="btn btn-success w-100">
+                  Sign Up
+                </button>
+              </div>
+
+            </div>
+          </form>
+
+          <hr>
+          <p class="text-center mb-0">
+            Already have an account?
+            <a href="login.html">Login</a>
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    // ── Helper: mark field as valid ──────────────────────────────
+    function markValid(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('is-invalid');
+      el.classList.add('is-valid');
+    }
+
+    // ── Helper: mark field as invalid ───────────────────────────
+    function markInvalid(id, msg) {
+      const el = document.getElementById(id);
+      el.classList.remove('is-valid');
+      el.classList.add('is-invalid');
+      document.getElementById(id + '-error').innerText = msg;
+    }
+
+    // ── Helper: clear field state ────────────────────────────────
+    function clearMark(id) {
+      const el = document.getElementById(id);
+      el.classList.remove('is-valid', 'is-invalid');
+    }
+
+    // ════════════════════════════════════════════════════════════
+    // LIVE VALIDATION — checks as user types
+    // ════════════════════════════════════════════════════════════
+
+    // ── UID: must be numeric ─────────────────────────────────────
+    document.getElementById('uid').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('uid');
+      } else if (!/^\d+$/.test(val)) {
+        markInvalid('uid', '⚠️ User ID must be numeric only');
+      } else {
+        markValid('uid');
+      }
+    });
+
+    // ── Name: only letters and spaces ───────────────────────────
+    document.getElementById('name').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('name');
+      } else if (!/^[a-zA-Z\s]+$/.test(val)) {
+        markInvalid('name', '⚠️ Name can only contain letters');
+      } else if (val.length < 3) {
+        markInvalid('name', '⚠️ Name must be at least 3 characters');
+      } else {
+        markValid('name');
+      }
+    });
+
+    // ── Phone: exactly 10 digits ─────────────────────────────────
+    document.getElementById('phone').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('phone');
+      } else if (!/^\d{10}$/.test(val)) {
+        markInvalid('phone', '⚠️ Phone must be exactly 10 digits');
+      } else {
+        markValid('phone');
+      }
+    });
+
+    // ── Email: proper format check ───────────────────────────────
+    document.getElementById('email').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('email');
+        return;
+      }
+
+      // ✅ Email regex — checks format properly
+      // Must have: something @ something . something
+      const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+      if (!emailRegex.test(val)) {
+        markInvalid('email', '⚠️ Enter a valid email e.g. name@example.com');
+      } else {
+        markValid('email');
+      }
+    });
+
+    // ── Address ──────────────────────────────────────────────────
+    document.getElementById('address').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('address');
+      } else if (val.length < 5) {
+        markInvalid('address', '⚠️ Address too short');
+      } else {
+        markValid('address');
+      }
+    });
+
+    // ── City ─────────────────────────────────────────────────────
+    document.getElementById('city').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('city');
+      } else if (!/^[a-zA-Z\s]+$/.test(val)) {
+        markInvalid('city', '⚠️ City name invalid');
+      } else {
+        markValid('city');
+      }
+    });
+
+    // ── State ────────────────────────────────────────────────────
+    document.getElementById('state').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('state');
+      } else if (!/^[a-zA-Z\s]+$/.test(val)) {
+        markInvalid('state', '⚠️ State name invalid');
+      } else {
+        markValid('state');
+      }
+    });
+
+    // ── Pincode: exactly 6 digits ────────────────────────────────
+    document.getElementById('pincode').addEventListener('input', function() {
+      const val = this.value.trim();
+      if (val === '') {
+        clearMark('pincode');
+      } else if (!/^\d{6}$/.test(val)) {
+        markInvalid('pincode', '⚠️ Pincode must be exactly 6 digits');
+      } else {
+        markValid('pincode');
+      }
+    });
+
+    // ── Password: strength check ─────────────────────────────────
+    document.getElementById('password').addEventListener('input', function() {
+      const val      = this.value;
+      const bar      = document.getElementById('strengthBar');
+      const text     = document.getElementById('strengthText');
+
+      if (val === '') {
+        clearMark('password');
+        bar.style.width = '0%';
+        text.innerText  = '';
+        return;
+      }
+
+      if (val.length < 6) {
+        markInvalid('password', '⚠️ Password must be at least 6 characters');
+        bar.style.width      = '25%';
+        bar.className        = 'strength-bar bg-danger';
+        text.innerText       = 'Too short';
+        text.className       = 'text-danger small';
+        return;
+      }
+
+      // Calculate strength
+      let score = 0;
+      if (val.length >= 8)              score++; // length
+      if (/[A-Z]/.test(val))            score++; // uppercase
+      if (/[0-9]/.test(val))            score++; // number
+      if (/[^a-zA-Z0-9]/.test(val))    score++; // special char
+
+      markValid('password');
+
+      if (score <= 1) {
+        bar.style.width = '33%';
+        bar.className   = 'strength-bar bg-danger';
+        text.innerText  = '🔴 Weak password';
+        text.className  = 'text-danger small';
+      } else if (score === 2 || score === 3) {
+        bar.style.width = '66%';
+        bar.className   = 'strength-bar bg-warning';
+        text.innerText  = '🟡 Medium password';
+        text.className  = 'text-warning small';
+      } else {
+        bar.style.width = '100%';
+        bar.className   = 'strength-bar bg-success';
+        text.innerText  = '🟢 Strong password!';
+        text.className  = 'text-success small';
+      }
+
+      // Re-check confirm password if already typed
+      const confirm = document.getElementById('confirm_password').value;
+      if (confirm !== '') checkConfirmPassword();
+    });
+
+    // ── Confirm Password: must match ─────────────────────────────
+    function checkConfirmPassword() {
+      const pass    = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm_password').value;
+
+      if (confirm === '') {
+        clearMark('confirm_password');
+        return;
+      }
+
+      if (pass !== confirm) {
+        markInvalid('confirm_password', '⚠️ Passwords do not match');
+      } else {
+        markValid('confirm_password');
+      }
+    }
+
+    document.getElementById('confirm_password')
+      .addEventListener('input', checkConfirmPassword);
+
+    // ════════════════════════════════════════════════════════════
+    // FORM SUBMIT — final check before sending to server
+    // ════════════════════════════════════════════════════════════
+    document.getElementById('signupForm')
+      .addEventListener('submit', function(e) {
+        e.preventDefault(); // stop form from submitting
+
+        let isValid = true;
+
+        // Check UID
+        const uid = document.getElementById('uid').value.trim();
+        if (!uid) {
+          markInvalid('uid', '⚠️ User ID is required');
+          isValid = false;
+        } else if (!/^\d+$/.test(uid)) {
+          markInvalid('uid', '⚠️ User ID must be numeric');
+          isValid = false;
+        }
+
+        // Check Name
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
+          markInvalid('name', '⚠️ Full name is required');
+          isValid = false;
+        } else if (name.length < 3) {
+          markInvalid('name', '⚠️ Name too short');
+          isValid = false;
+        }
+
+        // Check Phone
+        const phone = document.getElementById('phone').value.trim();
+        if (!phone) {
+          markInvalid('phone', '⚠️ Phone number is required');
+          isValid = false;
+        } else if (!/^\d{10}$/.test(phone)) {
+          markInvalid('phone', '⚠️ Must be exactly 10 digits');
+          isValid = false;
+        }
+
+        // Check Email
+        const email = document.getElementById('email').value.trim();
+        const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+        if (!email) {
+          markInvalid('email', '⚠️ Email is required');
+          isValid = false;
+        } else if (!emailRegex.test(email)) {
+          markInvalid('email', '⚠️ Enter a valid email e.g. name@example.com');
+          isValid = false;
+        }
+
+        // Check Address
+        const address = document.getElementById('address').value.trim();
+        if (!address || address.length < 5) {
+          markInvalid('address', '⚠️ Please enter a valid address');
+          isValid = false;
+        }
+
+        // Check City
+        const city = document.getElementById('city').value.trim();
+        if (!city) {
+          markInvalid('city', '⚠️ City is required');
+          isValid = false;
+        }
+
+        // Check State
+        const state = document.getElementById('state').value.trim();
+        if (!state) {
+          markInvalid('state', '⚠️ State is required');
+          isValid = false;
+        }
+
+        // Check Pincode
+        const pincode = document.getElementById('pincode').value.trim();
+        if (!pincode) {
+          markInvalid('pincode', '⚠️ Pincode is required');
+          isValid = false;
+        } else if (!/^\d{6}$/.test(pincode)) {
+          markInvalid('pincode', '⚠️ Must be exactly 6 digits');
+          isValid = false;
+        }
+
+        // Check Password
+        const password = document.getElementById('password').value;
+        if (!password) {
+          markInvalid('password', '⚠️ Password is required');
+          isValid = false;
+        } else if (password.length < 6) {
+          markInvalid('password', '⚠️ Password must be at least 6 characters');
+          isValid = false;
+        }
+
+        // Check Confirm Password
+        const confirm = document.getElementById('confirm_password').value;
+        if (!confirm) {
+          markInvalid('confirm_password', '⚠️ Please retype your password');
+          isValid = false;
+        } else if (password !== confirm) {
+          markInvalid('confirm_password', '⚠️ Passwords do not match');
+          isValid = false;
+        }
+
+        // Check Terms
+        if (!document.getElementById('terms').checked) {
+          document.getElementById('terms').classList.add('is-invalid');
+          document.getElementById('terms-error').innerText =
+            '⚠️ You must agree to the terms';
+          isValid = false;
+        } else {
+          document.getElementById('terms').classList.remove('is-invalid');
+        }
+
+        // ✅ All good — submit to server
+        if (isValid) {
+          console.log('✅ All validations passed — submitting to server');
+          this.submit();
+        } else {
+          console.log('❌ Validation failed — not submitting');
+          // Scroll to first error
+          const firstError = document.querySelector('.is-invalid');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+    });
+ // ── Show server-side error if redirected back ────────────────
+    const urlParams = new URLSearchParams(window.location.search);
+    const serverError = urlParams.get('error');
+
+    const serverErrorMessages = {
+      'uid_empty':        '⚠️ User ID is required.',
+      'uid_invalid':      '⚠️ User ID must be numeric.',
+      'name_invalid':     '⚠️ Name must be at least 3 characters.',
+      'phone_invalid':    '⚠️ Phone must be exactly 10 digits.',
+      'email_invalid':    '⚠️ Please enter a valid email address.',
+      'address_invalid':  '⚠️ Please enter a valid address.',
+      'city_invalid':     '⚠️ City is required.',
+      'state_invalid':    '⚠️ State is required.',
+      'pincode_invalid':  '⚠️ Pincode must be exactly 6 digits.',
+      'password_short':   '⚠️ Password must be at least 6 characters.',
+      'password_mismatch':'⚠️ Passwords do not match.',
+      'duplicate':        '⚠️ This User ID or Email already exists.',
+      'db':               '🔴 Server error. Please try again later.',
+      'failed':           '🔴 Registration failed. Please try again.'
+    };
+
+    if (serverError && serverErrorMessages[serverError]) {
+      const div = document.createElement('div');
+      div.className = 'alert alert-danger mt-3 text-center';
+      div.innerText = serverErrorMessages[serverError];
+      document.querySelector('.card').prepend(div);
+    }
+  </script>
+
+</body>
+</html>

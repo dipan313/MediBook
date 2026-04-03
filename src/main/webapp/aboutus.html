@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediBook - About Us</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="bg-light">
+
+  <!-- ✅ FIXED Navbar — navRight targets the ul inside navbar, not the nav itself -->
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="index.html">🏥 MediBook</a>
+      <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
+          <li class="nav-item"><a class="nav-link" href="DoctorPage">DOCTORS</a></li>
+          <li class="nav-item"><a class="nav-link active" href="aboutus.html">ABOUT US</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">CONTACT</a></li>
+        </ul>
+        <!-- ✅ Session filled here -->
+        <ul class="navbar-nav ms-auto" id="navRight"></ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <div class="bg-primary text-white text-center py-4">
+    <h3>About Us</h3>
+    <p class="mb-0">Learn more about MediBook</p>
+  </div>
+
+  <div class="container mt-5 mb-5">
+
+    <div class="row mb-4">
+      <div class="col-md-8 mx-auto text-center">
+        <h4>Who We Are</h4>
+        <p class="text-muted">MediBook is an online doctor booking platform founded in 2020. Our goal is to make
+          healthcare simple and accessible for everyone in India. We help patients connect with doctors, hospitals,
+          and emergency services easily.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row mt-4 mb-4">
+      <div class="col-md-6">
+        <h5>Our Mission</h5>
+        <p class="text-muted">To provide fast and reliable healthcare access to every patient across India — whether
+          it's booking a doctor, calling an ambulance, or getting lab reports online.</p>
+      </div>
+      <div class="col-md-6">
+        <h5>Our Vision</h5>
+        <p class="text-muted">We want to become India's most trusted digital health platform where no patient has to
+          struggle to find proper medical care.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="mt-4 mb-4">
+      <h5 class="text-center mb-3">Why Choose MediBook?</h5>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="card p-3">
+            <h6>✅ Verified Doctors</h6>
+            <p class="text-muted small mb-0">All doctors on our platform are verified and registered.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <h6>📱 Easy Booking</h6>
+            <p class="text-muted small mb-0">Book an appointment in under 2 minutes from your phone.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-3">
+            <h6>🕐 24/7 Support</h6>
+            <p class="text-muted small mb-0">We are available round the clock for emergency help.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Stats -->
+    <div class="row text-center mt-4 mb-2">
+      <div class="col-md-3">
+        <h3 class="fw-bold text-primary">500+</h3>
+        <p class="text-muted">Verified Doctors</p>
+      </div>
+      <div class="col-md-3">
+        <h3 class="fw-bold text-success">50,000+</h3>
+        <p class="text-muted">Happy Patients</p>
+      </div>
+      <div class="col-md-3">
+        <h3 class="fw-bold text-danger">24/7</h3>
+        <p class="text-muted">Emergency Support</p>
+      </div>
+      <div class="col-md-3">
+        <h3 class="fw-bold text-warning">100+</h3>
+        <p class="text-muted">Partner Hospitals</p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="bg-dark text-white text-center py-3 mt-4">
+    <p class="mb-0">&copy; 2026 MediBook. All rights reserved.</p>
+  </footer>
+
+  <!-- ✅ FIXED: targets #navRight inside the nav, not the nav element itself -->
+  <script>
+    fetch('GetSession')
+      .then(res => res.json())
+      .then(data => {
+        const navRight = document.getElementById('navRight');
+        if (data.loggedIn) {
+          navRight.innerHTML = `
+            <li class="nav-item d-flex align-items-center me-3">
+              <span class="text-white">
+                👤 <b>${data.name}</b>
+                <span class="badge bg-${data.role === 'admin' ? 'danger' : 'success'} ms-1">
+                  ${data.role.toUpperCase()}
+                </span>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-danger fw-bold" href="Logout">Logout</a>
+            </li>`;
+        } else {
+          navRight.innerHTML = `
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Login</a>
+            </li>`;
+        }
+      }).catch(() => {});
+  </script>
+
+</body>
+</html>

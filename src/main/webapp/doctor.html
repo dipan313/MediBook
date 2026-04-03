@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediBook - Find a Doctor</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f0f4f8; font-family: 'Nunito', sans-serif; }
+    .navbar { background: #0a2342 !important; }
+    .navbar-brand { font-weight: 800; font-size: 1.3rem; }
+    .hero-search {
+      background: linear-gradient(135deg, #0a2342 0%, #1565c0 100%);
+      padding: 14px 0 12px; color: #fff;
+    }
+    .search-box {
+      background: #fff; border-radius: 50px;
+      padding: 5px 5px 5px 16px; display: flex; align-items: center;
+      box-shadow: 0 6px 24px rgba(0,0,0,.22);
+    }
+    .search-box input { border:none; outline:none; flex:1; font-size:.88rem; font-family:'Nunito',sans-serif; background:transparent; color:#0a2342; }
+    .search-box select { border:none; outline:none; font-size:.82rem; color:#555; font-family:'Nunito',sans-serif; padding:0 10px; border-left:1px solid #ddd; background:transparent; cursor:pointer; }
+    .search-box button { border-radius:50px; padding:7px 18px; font-weight:700; font-size:.85rem; }
+    .stats-bar { background:#fff; border-bottom:1px solid #e0e7ef; padding:8px 0; font-size:.82rem; color:#555; }
+    .stats-bar b { color:#0a2342; }
+
+    /* Flip card */
+    .flip-card { perspective:1000px; height:260px; }
+    .flip-inner { position:relative; width:100%; height:100%; transition:transform 0.55s cubic-bezier(.4,0,.2,1); transform-style:preserve-3d; }
+    .flip-card:hover .flip-inner { transform:rotateY(180deg); }
+    .flip-front, .flip-back { position:absolute; width:100%; height:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden; border-radius:14px; overflow:hidden; }
+    .flip-front { background:#fff; box-shadow:0 2px 12px rgba(10,35,66,.09); display:flex; flex-direction:column; }
+    .card-photo-wrap { height:120px; background:linear-gradient(135deg,#e3f2fd,#bbdefb); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; flex-shrink:0; }
+    .card-photo-wrap img { width:100%; height:100%; object-fit:cover; }
+    .card-photo-wrap .avatar-placeholder { font-size:3.5rem; line-height:1; }
+    .spec-badge { position:absolute; top:8px; left:8px; background:#0a2342; color:#fff; font-size:.65rem; font-weight:700; padding:2px 8px; border-radius:50px; letter-spacing:.4px; text-transform:uppercase; }
+    .front-body { padding:10px 12px; flex:1; display:flex; flex-direction:column; }
+    .doctor-name { font-size:.95rem; font-weight:800; color:#0a2342; margin-bottom:1px; }
+    .doctor-hospital { font-size:.73rem; color:#888; margin-bottom:6px; }
+    .doctor-hospital span { color:#1565c0; font-weight:600; }
+    .info-row { display:flex; gap:8px; margin-bottom:6px; font-size:.75rem; }
+    .info-pill { background:#f0f4f8; border-radius:6px; padding:3px 8px; color:#444; font-weight:600; }
+    .fees-row { font-size:.88rem; font-weight:800; color:#0a2342; margin-top:auto; }
+    .fees-row span { font-size:.72rem; font-weight:400; color:#888; }
+    .flip-back { background:linear-gradient(145deg,#0a2342 0%,#1565c0 100%); transform:rotateY(180deg); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 16px; color:#fff; text-align:center; }
+    .back-avatar { font-size:2.6rem; margin-bottom:6px; }
+    .back-name { font-size:1rem; font-weight:800; margin-bottom:2px; }
+    .back-spec { font-size:.75rem; opacity:.8; margin-bottom:10px; }
+    .back-avail { font-size:.75rem; background:rgba(255,255,255,.15); border-radius:20px; padding:3px 12px; margin-bottom:12px; }
+    .back-fee { font-size:1.2rem; font-weight:800; margin-bottom:14px; }
+    .back-fee span { font-size:.72rem; font-weight:400; opacity:.7; }
+    .btn-book { background:#fff; color:#0a2342; border:none; border-radius:8px; padding:8px 20px; font-weight:800; font-size:.85rem; width:100%; transition:background .18s; cursor:pointer; }
+    .btn-book:hover { background:#f0f4f8; }
+
+    /* Filter */
+    .filter-card { background:#fff; border-radius:14px; box-shadow:0 2px 12px rgba(10,35,66,.07); padding:14px; }
+    .filter-card h6 { font-weight:800; color:#0a2342; margin-bottom:10px; font-size:.85rem; }
+    .filter-card .form-check-label { font-size:.82rem; color:#444; }
+    .filter-card .form-check { margin-bottom:4px; }
+    .empty-state { text-align:center; padding:40px 20px; color:#aaa; }
+    .empty-state .icon { font-size:3rem; margin-bottom:10px; }
+
+    /* Modals */
+    .modal-header { background:#0a2342; color:#fff; border-radius:12px 12px 0 0; }
+    .modal-header .btn-close { filter:invert(1); }
+    .modal-body label { font-weight:700; font-size:.85rem; color:#444; }
+    .modal-body .form-control { border-radius:8px; font-family:'Nunito',sans-serif; font-size:.88rem; }
+    .slot-btn { border:2px solid #1565c0; color:#1565c0; background:#fff; border-radius:8px; padding:5px 12px; font-size:.78rem; font-weight:700; cursor:pointer; transition:all .15s; }
+    .slot-btn.selected, .slot-btn:hover { background:#0a2342; color:#fff; border-color:#0a2342; }
+    .booking-summary { background:#f0f4f8; border-radius:10px; padding:10px 14px; font-size:.84rem; margin-bottom:12px; }
+    .booking-summary b { color:#0a2342; }
+
+    /* Payment modal specific */
+    .payment-header { background:linear-gradient(135deg,#0a2342,#1565c0); color:#fff; border-radius:12px 12px 0 0; padding:16px 20px; }
+    .pay-amount-box { background:linear-gradient(135deg,#0a2342,#1565c0); border-radius:12px; padding:18px; text-align:center; color:#fff; margin-bottom:16px; }
+    .pay-amount-box .amount { font-size:2rem; font-weight:800; }
+    .pay-amount-box .label { font-size:.78rem; opacity:.75; }
+    .pay-method { border:2px solid #e0e7ef; border-radius:10px; padding:12px 14px; cursor:pointer; transition:all .18s; margin-bottom:8px; display:flex; align-items:center; gap:12px; }
+    .pay-method:hover, .pay-method.selected { border-color:#1565c0; background:#f0f4ff; }
+    .pay-method .method-icon { font-size:1.4rem; width:36px; text-align:center; }
+    .pay-method .method-name { font-weight:700; font-size:.9rem; color:#0a2342; }
+    .pay-method .method-sub { font-size:.75rem; color:#888; }
+    .pay-method input[type=radio] { accent-color:#1565c0; }
+    .processing-overlay { display:none; position:absolute; inset:0; background:rgba(255,255,255,.92); border-radius:14px; z-index:10; flex-direction:column; align-items:center; justify-content:center; gap:12px; }
+    .processing-overlay.show { display:flex; }
+    .spinner-ring { width:48px; height:48px; border:4px solid #e0e7ef; border-top-color:#1565c0; border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .payment-done { display:none; text-align:center; padding:20px; }
+    .payment-done.show { display:block; }
+
+    /* Toast */
+    #toast-container { position:fixed; bottom:20px; right:20px; z-index:9999; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-sm navbar-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="index.html">🏥 MediBook</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
+        <li class="nav-item"><a class="nav-link active" href="DoctorPage">DOCTORS</a></li>
+        <li class="nav-item"><a class="nav-link" href="hospital.html">HOSPITALS</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutus.html">ABOUT US</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto" id="navRight"></ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero-search">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <h2 class="mb-0" style="font-weight:800;font-size:1.45rem;">Find the Right Doctor</h2>
+      <div class="search-box" style="max-width:300px;flex:0 0 300px;">
+        <input type="text" id="searchInput" placeholder="Name or specialization...">
+        <select id="filterSpec"><option value="">All</option></select>
+        <button class="btn btn-primary btn-sm" onclick="applyFilters()">Go</button>
+      </div>
+    </div>
+    <div class="text-center" style="opacity:.72;font-size:.82rem;">
+      Search from our network of verified specialists
+    </div>
+  </div>
+</div>
+
+<!-- Stats bar -->
+<div class="stats-bar">
+  <div class="container d-flex justify-content-between align-items-center">
+    <span>Showing <b id="docCount">0</b> doctors</span>
+    <div class="d-flex gap-3">
+      <label class="d-flex align-items-center gap-1" style="cursor:pointer;font-size:.82rem">
+        <input type="checkbox" id="sortFees"> Sort by Fees ↑
+      </label>
+      <label class="d-flex align-items-center gap-1" style="cursor:pointer;font-size:.82rem">
+        <input type="checkbox" id="sortExp"> Sort by Experience ↓
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="container mt-3 mb-5">
+  <div class="row g-3">
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="filter-card">
+        <h6>🔍 Fee Range</h6>
+        <input type="range" class="form-range" id="feeRange" min="0" max="2000" step="50" value="2000"
+          oninput="document.getElementById('feeLabel').innerText='₹'+this.value; applyFilters()">
+        <div class="d-flex justify-content-between" style="font-size:.75rem">
+          <span>₹0</span><span id="feeLabel">₹2000</span>
+        </div>
+        <hr class="my-2">
+        <h6>🏥 Experience</h6>
+        <div class="form-check">
+          <input class="form-check-input exp-filter" type="checkbox" value="0" id="exp0" onchange="applyFilters()">
+          <label class="form-check-label" for="exp0">Any</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input exp-filter" type="checkbox" value="5" id="exp5" onchange="applyFilters()">
+          <label class="form-check-label" for="exp5">5+ years</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input exp-filter" type="checkbox" value="10" id="exp10" onchange="applyFilters()">
+          <label class="form-check-label" for="exp10">10+ years</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input exp-filter" type="checkbox" value="15" id="exp15" onchange="applyFilters()">
+          <label class="form-check-label" for="exp15">15+ years</label>
+        </div>
+        <hr class="my-2">
+        <button class="btn btn-outline-secondary btn-sm w-100" onclick="resetFilters()">Reset Filters</button>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div class="row g-3" id="doctorGrid">
+        <div class="col-12 text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="mt-2 text-muted small">Loading doctors...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-dark text-white text-center py-3">
+  <p class="mb-0" style="font-size:.85rem">&copy; 2026 MediBook. All rights reserved.</p>
+</footer>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="modal fade" id="bookingModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;overflow:hidden;">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalTitle">Book Appointment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-3">
+        <div class="booking-summary" id="bookingSummary"></div>
+        <div class="mb-2">
+          <label>Your Name</label>
+          <input type="text" class="form-control form-control-sm" id="bkName" placeholder="Full name">
+        </div>
+        <div class="mb-2">
+          <label>Your Phone</label>
+          <input type="text" class="form-control form-control-sm" id="bkPhone" placeholder="10 digit phone">
+        </div>
+        <div class="mb-2">
+          <label>Appointment Date</label>
+          <input type="date" class="form-control form-control-sm" id="bkDate">
+        </div>
+        <div class="mb-2">
+          <label>Select Time Slot</label>
+          <div class="d-flex flex-wrap gap-2 mt-1">
+            <button class="slot-btn" onclick="selectSlot(this)">09:00 AM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">10:00 AM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">11:00 AM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">12:00 PM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">02:00 PM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">03:00 PM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">04:00 PM</button>
+            <button class="slot-btn" onclick="selectSlot(this)">05:00 PM</button>
+          </div>
+        </div>
+        <div class="mb-2">
+          <label>Reason <span class="text-muted fw-normal">(optional)</span></label>
+          <textarea class="form-control form-control-sm" id="bkReason" rows="2" placeholder="Brief description"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0 px-3 pb-3">
+        <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary btn-sm fw-bold px-4" id="confirmBtn" onclick="confirmBooking()">
+          📅 Confirm &amp; Pay
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAYMENT MODAL ══ -->
+<div class="modal fade" id="paymentModal" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:14px;overflow:hidden;position:relative;">
+
+      <!-- Processing overlay -->
+      <div class="processing-overlay" id="processingOverlay">
+        <div class="spinner-ring"></div>
+        <div style="font-weight:700;color:#0a2342;font-size:.95rem;">Processing Payment...</div>
+        <div style="font-size:.8rem;color:#888;">Please wait</div>
+      </div>
+
+      <!-- Payment done overlay -->
+      <div class="processing-overlay" id="paymentDoneOverlay">
+        <div style="font-size:3.5rem;">✅</div>
+        <div style="font-weight:800;color:#0a2342;font-size:1.1rem;">Payment Successful!</div>
+        <div style="font-size:.82rem;color:#555;" id="payRefDisplay"></div>
+        <div style="font-size:.82rem;color:#888;margin-top:4px;">Booking status: <b style="color:#28a745;">Confirmed</b></div>
+        <button class="btn btn-primary btn-sm fw-bold px-4 mt-3" onclick="closePaymentSuccess()">Done</button>
+      </div>
+
+      <div class="payment-header">
+        <div style="font-size:1rem;font-weight:800;">💳 Complete Payment</div>
+        <div style="font-size:.78rem;opacity:.75;margin-top:2px;">Secure dummy payment for demo</div>
+      </div>
+
+      <div class="modal-body p-3">
+        <!-- Amount box -->
+        <div class="pay-amount-box">
+          <div class="label">Consultation Fee</div>
+          <div class="amount">₹<span id="payAmount">0</span></div>
+          <div class="label" id="payDoctorName"></div>
+        </div>
+
+        <!-- Booking ref -->
+        <div style="font-size:.78rem;color:#888;margin-bottom:12px;text-align:center;">
+          Booking ID: <b style="color:#0a2342;" id="payBookingId">-</b> &nbsp;|&nbsp; Status: <span class="badge bg-warning text-dark">Pending</span>
+        </div>
+
+        <!-- Payment methods -->
+        <label style="font-weight:700;font-size:.85rem;color:#444;display:block;margin-bottom:8px;">Select Payment Method</label>
+
+        <div class="pay-method selected" onclick="selectPayMethod(this,'upi')">
+          <input type="radio" name="payMethod" value="upi" checked>
+          <div class="method-icon">📱</div>
+          <div>
+            <div class="method-name">UPI</div>
+            <div class="method-sub">Google Pay, PhonePe, Paytm</div>
+          </div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'card')">
+          <input type="radio" name="payMethod" value="card">
+          <div class="method-icon">💳</div>
+          <div>
+            <div class="method-name">Credit / Debit Card</div>
+            <div class="method-sub">Visa, Mastercard, Rupay</div>
+          </div>
+        </div>
+        <div class="pay-method" onclick="selectPayMethod(this,'netbanking')">
+          <input type="radio" name="payMethod" value="netbanking">
+          <div class="method-icon">🏦</div>
+          <div>
+            <div class="method-name">Net Banking</div>
+            <div class="method-sub">All major banks supported</div>
+          </div>
+        </div>
+
+        <!-- UPI input (shown by default) -->
+        <div id="upiInput" class="mt-2">
+          <input type="text" class="form-control form-control-sm" placeholder="Enter UPI ID (e.g. name@upi)" id="upiId">
+        </div>
+        <!-- Card input -->
+        <div id="cardInput" class="mt-2" style="display:none;">
+          <input type="text" class="form-control form-control-sm mb-2" placeholder="Card Number (dummy)" maxlength="19" id="cardNum">
+          <div class="d-flex gap-2">
+            <input type="text" class="form-control form-control-sm" placeholder="MM/YY" maxlength="5" id="cardExp">
+            <input type="text" class="form-control form-control-sm" placeholder="CVV" maxlength="3" id="cardCvv">
+          </div>
+        </div>
+        <!-- Net banking input -->
+        <div id="netbankingInput" class="mt-2" style="display:none;">
+          <select class="form-control form-control-sm" id="bankSelect">
+            <option value="">Select Bank</option>
+            <option>SBI</option><option>HDFC Bank</option><option>ICICI Bank</option>
+            <option>Axis Bank</option><option>Kotak Bank</option><option>PNB</option>
+          </select>
+        </div>
+
+        <div style="font-size:.72rem;color:#aaa;margin-top:10px;text-align:center;">
+          🔒 This is a dummy payment — no real money will be charged
+        </div>
+      </div>
+
+      <div class="modal-footer border-0 pt-0 px-3 pb-3">
+        <button class="btn btn-outline-secondary btn-sm" onclick="skipPayment()">Pay Later</button>
+        <button class="btn btn-success btn-sm fw-bold px-4" id="payNowBtn" onclick="processPayment()">
+          💰 Pay ₹<span id="payBtnAmount">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast-container">
+  <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body fw-bold" id="toastMsg">Done!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let allDoctors     = [];
+  let currentSession = null;
+  let selectedDoctor = null;
+  let selectedSlot   = null;
+  let currentApptId  = null;
+  let selectedMethod = 'upi';
+
+  // ── Toast ─────────────────────────────────────────────────────
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('appToast');
+    toast.className = `toast align-items-center text-white border-0 bg-${type}`;
+    document.getElementById('toastMsg').innerText = msg;
+    new bootstrap.Toast(toast, { delay: 3500 }).show();
+  }
+
+  // ── Helper: show field error ──────────────────────────────────
+  function showFieldError(inputEl, msg) {
+    inputEl.classList.add('is-invalid');
+    // Remove old error if exists
+    const old = inputEl.parentElement.querySelector('.invalid-feedback');
+    if (old) old.remove();
+    const div = document.createElement('div');
+    div.className   = 'invalid-feedback';
+    div.style.display = 'block';
+    div.innerText   = msg;
+    inputEl.parentElement.appendChild(div);
+  }
+
+  // ── Helper: clear field error ─────────────────────────────────
+  function clearFieldError(inputEl) {
+    inputEl.classList.remove('is-invalid');
+    inputEl.classList.add('is-valid');
+    const old = inputEl.parentElement.querySelector('.invalid-feedback');
+    if (old) old.remove();
+  }
+
+  // ── Helper: reset field state ─────────────────────────────────
+  function resetField(inputEl) {
+    inputEl.classList.remove('is-invalid', 'is-valid');
+    const old = inputEl.parentElement.querySelector('.invalid-feedback');
+    if (old) old.remove();
+  }
+
+  // ── Session ───────────────────────────────────────────────────
+  fetch('GetSession').then(r => r.json()).then(data => {
+    currentSession = data;
+    const navRight = document.getElementById('navRight');
+    if (data.loggedIn) {
+      navRight.innerHTML = `
+        <li class="nav-item d-flex align-items-center me-3">
+          <span class="text-white small">👤 <b>${data.name}</b>
+            <span class="badge bg-${data.role==='admin'?'danger':'success'} ms-1">
+              ${data.role.toUpperCase()}
+            </span>
+          </span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-danger fw-bold" href="Logout">Logout</a>
+        </li>`;
+    } else {
+      navRight.innerHTML = `
+        <li class="nav-item">
+          <a class="nav-link" href="login.html">Login</a>
+        </li>`;
+    }
+  }).catch(() => {});
+
+  // ── Load doctors ──────────────────────────────────────────────
+  function loadDoctors() {
+    fetch('DoctorPage?action=getAll').then(r => r.json()).then(data => {
+      allDoctors = data;
+      populateSpecFilter(data);
+      renderDoctors(data);
+    }).catch(() => {
+      document.getElementById('doctorGrid').innerHTML =
+        `<div class="col-12 empty-state">
+           <div class="icon">⚠️</div>
+           <p>Failed to load doctors.</p>
+         </div>`;
+    });
+  }
+
+  function populateSpecFilter(doctors) {
+    const specs = [...new Set(doctors.map(d => d.specialization))].sort();
+    const sel   = document.getElementById('filterSpec');
+    specs.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      sel.appendChild(o);
+    });
+  }
+
+  function renderDoctors(doctors) {
+    const grid = document.getElementById('doctorGrid');
+    document.getElementById('docCount').textContent = doctors.length;
+    if (!doctors.length) {
+      grid.innerHTML = `
+        <div class="col-12 empty-state">
+          <div class="icon">🔍</div>
+          <p>No doctors found.</p>
+          <button class="btn btn-outline-primary btn-sm"
+            onclick="resetFilters()">Clear Filters</button>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = doctors.map(doc => `
+      <div class="col-md-6 col-xl-4">
+        <div class="flip-card"><div class="flip-inner">
+          <div class="flip-front">
+            <div class="card-photo-wrap">
+              ${doc.photo_url
+                ? `<img src="${doc.photo_url}" alt="${doc.name}"
+                     onerror="this.parentElement.innerHTML=
+                       '<div class=avatar-placeholder>👨‍⚕️</div>
+                        <span class=spec-badge>${doc.specialization}</span>'">`
+                : `<div class="avatar-placeholder">👨‍⚕️</div>`}
+              <span class="spec-badge">${doc.specialization}</span>
+            </div>
+            <div class="front-body">
+              <div class="doctor-name">Dr. ${doc.name}</div>
+              <div class="doctor-hospital">🏥 <span>${doc.hospital}</span></div>
+              <div class="info-row">
+                <div class="info-pill">🎓 ${doc.experience} yrs</div>
+                <div class="info-pill">💊 ${doc.specialization}</div>
+              </div>
+              <div class="fees-row">₹${doc.fees} <span>/ consultation</span></div>
+            </div>
+          </div>
+          <div class="flip-back">
+            <div class="back-avatar">👨‍⚕️</div>
+            <div class="back-name">Dr. ${doc.name}</div>
+            <div class="back-spec">${doc.specialization}</div>
+            <div class="back-avail">🟢 ${doc.availability}</div>
+            <div class="back-fee">₹${doc.fees} <span>/ consultation</span></div>
+            <button class="btn-book"
+              onclick="openBooking(${doc.id},'${escapeJs(doc.name)}',
+                '${escapeJs(doc.specialization)}',
+                '${escapeJs(doc.hospital)}',${doc.fees})">
+              📅 Book Appointment
+            </button>
+          </div>
+        </div></div>
+      </div>`).join('');
+  }
+
+  function escapeJs(s) {
+    return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+  }
+
+  // ── Filters ───────────────────────────────────────────────────
+  function applyFilters() {
+    const search   = document.getElementById('searchInput').value.toLowerCase();
+    const spec     = document.getElementById('filterSpec').value;
+    const maxFee   = parseInt(document.getElementById('feeRange').value);
+    const sortFee  = document.getElementById('sortFees').checked;
+    const sortExp  = document.getElementById('sortExp').checked;
+    const expChecked = [...document.querySelectorAll('.exp-filter:checked')]
+                       .map(el => parseInt(el.value));
+    const minExp   = expChecked.length ? Math.max(...expChecked) : 0;
+
+    let filtered = allDoctors.filter(d =>
+      (d.name.toLowerCase().includes(search) ||
+       d.specialization.toLowerCase().includes(search) ||
+       d.hospital.toLowerCase().includes(search)) &&
+      (!spec || d.specialization === spec) &&
+      d.fees <= maxFee &&
+      d.experience >= minExp
+    );
+
+    if (sortFee) filtered.sort((a,b) => a.fees - b.fees);
+    if (sortExp) filtered.sort((a,b) => b.experience - a.experience);
+    renderDoctors(filtered);
+  }
+
+  function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('filterSpec').value  = '';
+    document.getElementById('feeRange').value    = 2000;
+    document.getElementById('feeLabel').innerText = '₹2000';
+    document.querySelectorAll('.exp-filter').forEach(el => el.checked = false);
+    document.getElementById('sortFees').checked = false;
+    document.getElementById('sortExp').checked  = false;
+    renderDoctors(allDoctors);
+  }
+
+  // ── Open booking modal ────────────────────────────────────────
+  function openBooking(id, name, spec, hospital, fees) {
+    if (!currentSession || !currentSession.loggedIn) {
+      window.location.href = `login.html?redirect=DoctorPage&docId=${id}`;
+      return;
+    }
+    selectedDoctor = { id, name, spec, hospital, fees };
+    selectedSlot   = null;
+    currentApptId  = null;
+
+    document.getElementById('modalTitle').textContent =
+      `Book with Dr. ${name}`;
+    document.getElementById('bookingSummary').innerHTML =
+      `<b>👨‍⚕️ Dr. ${name}</b> &nbsp;|&nbsp; ${spec}<br>
+       🏥 ${hospital} &nbsp;|&nbsp; <b>₹${fees}</b> consultation fee`;
+
+    // Pre-fill name from session
+    document.getElementById('bkName').value   = currentSession.name || '';
+    document.getElementById('bkPhone').value  = '';
+    document.getElementById('bkDate').value   = '';
+    document.getElementById('bkReason').value = '';
+
+    // Reset all field states
+    ['bkName','bkPhone','bkDate'].forEach(id => {
+      resetField(document.getElementById(id));
+    });
+
+    // Reset slot selection
+    document.querySelectorAll('.slot-btn').forEach(b =>
+      b.classList.remove('selected'));
+
+    // ✅ Set min date to today — cannot book in the past
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('bkDate').min = today;
+
+    // ✅ Set max date to 30 days from now — cannot book too far ahead
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+    document.getElementById('bkDate').max =
+      maxDate.toISOString().split('T')[0];
+
+    new bootstrap.Modal(document.getElementById('bookingModal')).show();
+  }
+
+  function selectSlot(btn) {
+    document.querySelectorAll('.slot-btn').forEach(b =>
+      b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedSlot = btn.textContent.trim();
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // BOOKING MODAL — LIVE VALIDATIONS
+  // ════════════════════════════════════════════════════════════
+
+  // ✅ Name — live validation
+  document.getElementById('bkName').addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val === '') {
+      resetField(this); return;
+    }
+    if (val.length < 3) {
+      showFieldError(this, '⚠️ Name must be at least 3 characters');
+    } else if (!/^[a-zA-Z\s]+$/.test(val)) {
+      showFieldError(this, '⚠️ Name can only contain letters');
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ✅ Phone — live validation
+  document.getElementById('bkPhone').addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val === '') {
+      resetField(this); return;
+    }
+    if (!/^\d+$/.test(val)) {
+      showFieldError(this, '⚠️ Phone must contain digits only');
+    } else if (val.length !== 10) {
+      showFieldError(this, `⚠️ Phone must be 10 digits (${val.length}/10)`);
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ✅ Date — live validation
+  document.getElementById('bkDate').addEventListener('change', function() {
+    const val      = this.value;
+    const today    = new Date(); today.setHours(0,0,0,0);
+    const selected = new Date(val);
+    const maxDate  = new Date();
+    maxDate.setDate(maxDate.getDate() + 30);
+
+    if (!val) {
+      resetField(this); return;
+    }
+    if (selected < today) {
+      showFieldError(this, '⚠️ Cannot book a past date');
+      this.value = '';
+    } else if (selected > maxDate) {
+      showFieldError(this, '⚠️ Cannot book more than 30 days ahead');
+      this.value = '';
+    } else {
+      // ✅ Check if it's a Sunday
+      if (selected.getDay() === 0) {
+        showFieldError(this, '⚠️ Sundays are not available');
+        this.value = '';
+      } else {
+        clearFieldError(this);
+      }
+    }
+  });
+
+  // ── Step 1: Confirm booking ───────────────────────────────────
+  function confirmBooking() {
+    let isValid = true;
+
+    // ✅ Validate Name
+    const nameEl = document.getElementById('bkName');
+    const name   = nameEl.value.trim();
+    if (!name) {
+      showFieldError(nameEl, '⚠️ Name is required');
+      isValid = false;
+    } else if (name.length < 3) {
+      showFieldError(nameEl, '⚠️ Name must be at least 3 characters');
+      isValid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+      showFieldError(nameEl, '⚠️ Name can only contain letters');
+      isValid = false;
+    } else {
+      clearFieldError(nameEl);
+    }
+
+    // ✅ Validate Phone
+    const phoneEl = document.getElementById('bkPhone');
+    const phone   = phoneEl.value.trim();
+    if (!phone) {
+      showFieldError(phoneEl, '⚠️ Phone number is required');
+      isValid = false;
+    } else if (!/^\d{10}$/.test(phone)) {
+      showFieldError(phoneEl, '⚠️ Must be exactly 10 digits');
+      isValid = false;
+    } else {
+      clearFieldError(phoneEl);
+    }
+
+    // ✅ Validate Date
+    const dateEl = document.getElementById('bkDate');
+    const date   = dateEl.value;
+    if (!date) {
+      showFieldError(dateEl, '⚠️ Please select an appointment date');
+      isValid = false;
+    } else {
+      const selected = new Date(date);
+      const today    = new Date(); today.setHours(0,0,0,0);
+      if (selected < today) {
+        showFieldError(dateEl, '⚠️ Cannot book a past date');
+        isValid = false;
+      } else if (selected.getDay() === 0) {
+        showFieldError(dateEl, '⚠️ Sundays are not available');
+        isValid = false;
+      } else {
+        clearFieldError(dateEl);
+      }
+    }
+
+    // ✅ Validate Time Slot
+    if (!selectedSlot) {
+      showToast('⚠️ Please select a time slot', 'danger');
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
+    // ── All valid — send to server ────────────────────────────
+    const btn = document.getElementById('confirmBtn');
+    btn.disabled    = true;
+    btn.textContent = '⏳ Saving...';
+
+    const params = new URLSearchParams();
+    params.append('action',      'bookAppointment');
+    params.append('doctorId',    selectedDoctor.id);
+    params.append('patientName', name);
+    params.append('phone',       phone);
+    params.append('apptDate',    date);
+    params.append('timeSlot',    selectedSlot);
+    params.append('reason',      document.getElementById('bkReason').value.trim());
+    params.append('fees',        selectedDoctor.fees);
+
+    fetch('DoctorPage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    })
+    .then(r => r.json())
+    .then(data => {
+      btn.disabled  = false;
+      btn.innerHTML = '📅 Confirm &amp; Pay';
+      if (data.success) {
+        currentApptId = data.appointmentId;
+        bootstrap.Modal.getInstance(
+          document.getElementById('bookingModal')).hide();
+        setTimeout(() => openPaymentModal(data.fees), 400);
+      } else {
+        showToast(data.message || 'Booking failed', 'danger');
+      }
+    })
+    .catch(() => {
+      btn.disabled  = false;
+      btn.innerHTML = '📅 Confirm &amp; Pay';
+      showToast('Network error', 'danger');
+    });
+  }
+
+  // ── Step 2: Open payment modal ────────────────────────────────
+  function openPaymentModal(fees) {
+    document.getElementById('payAmount').textContent     = fees;
+    document.getElementById('payBtnAmount').textContent  = fees;
+    document.getElementById('payDoctorName').textContent =
+      `Dr. ${selectedDoctor.name} · ${selectedDoctor.spec}`;
+    document.getElementById('payBookingId').textContent  =
+      '#' + currentApptId;
+    document.getElementById('processingOverlay').classList.remove('show');
+    document.getElementById('paymentDoneOverlay').classList.remove('show');
+
+    // Reset payment method
+    selectPayMethod(document.querySelector('.pay-method'), 'upi');
+    document.querySelectorAll('input[name=payMethod]')[0].checked = true;
+
+    // Clear all payment inputs
+    document.getElementById('upiId').value     = '';
+    document.getElementById('cardNum').value   = '';
+    document.getElementById('cardExp').value   = '';
+    document.getElementById('cardCvv').value   = '';
+    document.getElementById('bankSelect').value = '';
+
+    // Reset payment field states
+    ['upiId','cardNum','cardExp','cardCvv'].forEach(id => {
+      resetField(document.getElementById(id));
+    });
+
+    new bootstrap.Modal(document.getElementById('paymentModal')).show();
+  }
+
+  function selectPayMethod(el, method) {
+    document.querySelectorAll('.pay-method').forEach(m =>
+      m.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedMethod = method;
+    document.getElementById('upiInput').style.display        =
+      method === 'upi'        ? 'block' : 'none';
+    document.getElementById('cardInput').style.display       =
+      method === 'card'       ? 'block' : 'none';
+    document.getElementById('netbankingInput').style.display =
+      method === 'netbanking' ? 'block' : 'none';
+    const radio = el.querySelector('input[type=radio]');
+    if (radio) radio.checked = true;
+
+    // Clear errors when switching methods
+    ['upiId','cardNum','cardExp','cardCvv'].forEach(id => {
+      resetField(document.getElementById(id));
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PAYMENT MODAL — LIVE VALIDATIONS
+  // ════════════════════════════════════════════════════════════
+
+  // ✅ UPI ID — format: something@something
+  document.getElementById('upiId').addEventListener('input', function() {
+    const val = this.value.trim();
+    if (val === '') { resetField(this); return; }
+    const upiRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+$/;
+    if (!upiRegex.test(val)) {
+      showFieldError(this, '⚠️ Invalid UPI ID format e.g. name@upi');
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ✅ Card number — 16 digits with spaces formatting
+  document.getElementById('cardNum').addEventListener('input', function() {
+    // Auto-format: add space every 4 digits
+    let val = this.value.replace(/\D/g, '').substring(0, 16);
+    this.value = val.match(/.{1,4}/g)?.join(' ') || val;
+
+    const digits = val.replace(/\s/g,'');
+    if (digits === '') { resetField(this); return; }
+    if (digits.length !== 16) {
+      showFieldError(this,
+        `⚠️ Card number must be 16 digits (${digits.length}/16)`);
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ✅ Card expiry — MM/YY format, not expired
+  document.getElementById('cardExp').addEventListener('input', function() {
+    let val = this.value.replace(/\D/g,'').substring(0, 4);
+    if (val.length >= 2) val = val.slice(0,2) + '/' + val.slice(2);
+    this.value = val;
+
+    const raw = val.replace('/','');
+    if (raw === '') { resetField(this); return; }
+
+    if (raw.length < 4) {
+      showFieldError(this, '⚠️ Enter expiry as MM/YY');
+      return;
+    }
+
+    const month = parseInt(val.slice(0,2));
+    const year  = parseInt('20' + val.slice(3,5));
+    const now   = new Date();
+
+    if (month < 1 || month > 12) {
+      showFieldError(this, '⚠️ Invalid month (01-12)');
+    } else if (year < now.getFullYear() ||
+              (year === now.getFullYear() &&
+               month < now.getMonth() + 1)) {
+      showFieldError(this, '⚠️ Card has expired');
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ✅ CVV — exactly 3 digits
+  document.getElementById('cardCvv').addEventListener('input', function() {
+    const val = this.value.replace(/\D/g,'').substring(0,3);
+    this.value = val;
+    if (val === '') { resetField(this); return; }
+    if (val.length !== 3) {
+      showFieldError(this, `⚠️ CVV must be 3 digits (${val.length}/3)`);
+    } else {
+      clearFieldError(this);
+    }
+  });
+
+  // ── Step 3: Process dummy payment ────────────────────────────
+  function processPayment() {
+
+    let isValid = true;
+
+    // ✅ Validate based on selected method
+    if (selectedMethod === 'upi') {
+      const upiEl  = document.getElementById('upiId');
+      const upiVal = upiEl.value.trim();
+      const upiRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+$/;
+      if (!upiVal) {
+        showFieldError(upiEl, '⚠️ UPI ID is required');
+        isValid = false;
+      } else if (!upiRegex.test(upiVal)) {
+        showFieldError(upiEl, '⚠️ Invalid UPI ID e.g. name@upi');
+        isValid = false;
+      } else {
+        clearFieldError(upiEl);
+      }
+    }
+
+    if (selectedMethod === 'card') {
+      // Card number
+      const cardEl  = document.getElementById('cardNum');
+      const digits  = cardEl.value.replace(/\s/g,'');
+      if (!digits) {
+        showFieldError(cardEl, '⚠️ Card number is required');
+        isValid = false;
+      } else if (digits.length !== 16) {
+        showFieldError(cardEl, '⚠️ Card number must be 16 digits');
+        isValid = false;
+      } else {
+        clearFieldError(cardEl);
+      }
+
+      // Expiry
+      const expEl  = document.getElementById('cardExp');
+      const expVal = expEl.value;
+      if (!expVal || expVal.length < 5) {
+        showFieldError(expEl, '⚠️ Enter expiry MM/YY');
+        isValid = false;
+      } else {
+        const month = parseInt(expVal.slice(0,2));
+        const year  = parseInt('20' + expVal.slice(3,5));
+        const now   = new Date();
+        if (month < 1 || month > 12) {
+          showFieldError(expEl, '⚠️ Invalid month');
+          isValid = false;
+        } else if (year < now.getFullYear() ||
+                  (year === now.getFullYear() &&
+                   month < now.getMonth() + 1)) {
+          showFieldError(expEl, '⚠️ Card has expired');
+          isValid = false;
+        } else {
+          clearFieldError(expEl);
+        }
+      }
+
+      // CVV
+      const cvvEl  = document.getElementById('cardCvv');
+      const cvvVal = cvvEl.value;
+      if (!cvvVal) {
+        showFieldError(cvvEl, '⚠️ CVV is required');
+        isValid = false;
+      } else if (cvvVal.length !== 3) {
+        showFieldError(cvvEl, '⚠️ CVV must be 3 digits');
+        isValid = false;
+      } else {
+        clearFieldError(cvvEl);
+      }
+    }
+
+    if (selectedMethod === 'netbanking') {
+      if (!document.getElementById('bankSelect').value) {
+        showToast('⚠️ Please select a bank', 'danger');
+        isValid = false;
+      }
+    }
+
+    if (!isValid) return;
+
+    // ── All valid — simulate payment processing ───────────────
+    document.getElementById('processingOverlay').classList.add('show');
+
+    const payRef = 'MB' + Date.now().toString().slice(-8).toUpperCase();
+
+    setTimeout(() => {
+      const params = new URLSearchParams();
+      params.append('action',        'confirmPayment');
+      params.append('appointmentId', currentApptId);
+      params.append('paymentRef',    payRef);
+
+      fetch('DoctorPage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      })
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('processingOverlay').classList.remove('show');
+        if (data.success) {
+          document.getElementById('payRefDisplay').textContent =
+            'Payment Ref: ' + payRef;
+          document.getElementById('paymentDoneOverlay').classList.add('show');
+        } else {
+          showToast(data.message || 'Payment failed', 'danger');
+        }
+      })
+      .catch(() => {
+        document.getElementById('processingOverlay').classList.remove('show');
+        showToast('Network error during payment', 'danger');
+      });
+    }, 2000);
+  }
+
+  // ── Skip payment ──────────────────────────────────────────────
+  function skipPayment() {
+    bootstrap.Modal.getInstance(
+      document.getElementById('paymentModal')).hide();
+    showToast('Booking saved! Complete payment later.', 'warning');
+  }
+
+  function closePaymentSuccess() {
+    bootstrap.Modal.getInstance(
+      document.getElementById('paymentModal')).hide();
+  }
+
+  // ── Event listeners ───────────────────────────────────────────
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+  document.getElementById('filterSpec').addEventListener('change', applyFilters);
+  document.getElementById('sortFees').addEventListener('change', applyFilters);
+  document.getElementById('sortExp').addEventListener('change', applyFilters);
+
+  window.onload = loadDoctors;
+</script>
+</body>
+</html>

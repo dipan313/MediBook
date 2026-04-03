@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-21">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/jasper.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/jaspic-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/jsp-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-coyote.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-coyote-ffm.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-dbcp.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-cs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-de.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-es.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-fr.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-ja.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-ko.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-pt-BR.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-ru.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-i18n-zh-CN.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-jdbc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-jni.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-util.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-util-scan.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/tomcat-websocket.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/websocket-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/websocket-client-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/annotations-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina-ant.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina-ha.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina-ssi.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina-storeconfig.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/catalina-tribes.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/ecj-4.38.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/el-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/jakartaee-migration-1.0.10-shaded.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/apache-tomcat-11.0.18/apache-tomcat-11.0.18/lib/jasper-el.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dipan Mazumder/Downloads/mysql-connector-j-9.6.0/mysql-connector-j-9.6.0/mysql-connector-j-9.6.0.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
