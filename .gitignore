@@ -1,0 +1,15 @@
+# Create .gitignore
+echo ".settings/
+.classpath
+.project
+build/
+*.class
+target/" > .gitignore
+
+git rm -r --cached build/
+git rm -r --cached .settings/
+git rm --cached .classpath
+git rm --cached .project
+git add .
+git commit -m "Remove build files, add .gitignore"
+git push
